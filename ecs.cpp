@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     registry.add(entity, Gravity{ {0.f, 9.8f, 0.f }});
     std::cout << "Sizeof Pool<Transform>: " << registry.size<Transform>() << std::endl;
 
-    auto &t = registry.get<Transform>(entity);
+    const auto &t = registry.get<Transform>(entity);
     std::cout << t.position[0] << "," << t.position[1] << "," << t.position[2] << std::endl
 	      << t.rotation[0] << "," << t.rotation[1] << "," << t.rotation[2] << std::endl
 	      << t.scale[0] << "," << t.scale[1] << "," << t.scale[2] << std::endl;
@@ -59,8 +59,8 @@ int main(int argc, char **argv)
     {
 	    std::cout << "Entity " << entity << std::endl;
 
-	    auto &t = registry.get<Transform>(entity);
-	    auto &g = registry.get<Gravity>(entity);
+	    const auto &t = registry.get<Transform>(entity);
+	    const auto &g = registry.get<Gravity>(entity);
 	    std::cout << " " << t.position[0] << "," << t.position[1] << "," << t.position[2] << std::endl
 		      << " " << t.rotation[0] << "," << t.rotation[1] << "," << t.rotation[2] << std::endl
 		      << " " << t.scale[0] << "," << t.scale[1] << "," << t.scale[2] << std::endl;
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     for (auto entity: registry.extract<Gravity>())
     {
-	    auto &g = registry.get<Gravity>(entity);
+	    const auto &g = registry.get<Gravity>(entity);
 	    std::cout << "Entity: " << entity
 		      << " " << g.force[0] << "," << g.force[1] << "," << g.force[2] << std::endl;
     }
