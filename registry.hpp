@@ -3,6 +3,7 @@
 #include <bitset>
 #include <cassert>
 #include <tuple>
+#include <type_traits>
 #include <vector>
 
 #include "componentpool.hpp"
@@ -124,7 +125,13 @@ public:
 	}
 
 	template<typename... Cs>
-	View<pool_type, indexOf<Cs>...> extract() noexcept
+	std::enable_if_t<(sizeof...(Cs) == 1), View<pool_type, indexOf<Cs>...>> extract() noexcept
+	{
+		return View<pool_type, indexOf<Cs>...>(mPool);
+	}
+
+	template<typename... Cs>
+	std::enable_if_t<(sizeof...(Cs) > 1), View<pool_type, indexOf<Cs>...>> extract() noexcept
 	{
 		return View<pool_type, indexOf<Cs>...>(mPool, mEntities);
 	}

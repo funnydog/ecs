@@ -67,6 +67,13 @@ int main(int argc, char **argv)
 	    std::cout << " " << g.force[0] << "," << g.force[1] << "," << g.force[2] << std::endl;
     }
 
+    for (auto entity: registry.extract<Gravity>())
+    {
+	    auto &g = registry.get<Gravity>(entity);
+	    std::cout << "Entity: " << entity
+		      << " " << g.force[0] << "," << g.force[1] << "," << g.force[2] << std::endl;
+    }
+
     registry.remove(entity);
     std::cout << "remove the trasform for 0" << std::endl;
     std::cout << "Sizeof Pool<Transform>: " << registry.size<Transform>() << std::endl;

@@ -116,3 +116,36 @@ private:
 	pool_iterator mBegin;
 	pool_iterator mEnd;
 };
+
+template<typename Pool, std::size_t Index>
+class View<Pool, Index>
+{
+	using pool_type = std::tuple_element_t<Index, Pool>;
+public:
+	using iterator_type = typename pool_type::iterator;
+	using entity_type = typename pool_type::entity_type;
+	using size_type = typename pool_type::size_type;
+public:
+	explicit View(Pool &pool)
+		: mPool(std::get<Index>(pool))
+	{
+	}
+
+	size_type size() const noexcept
+	{
+		return mPool.size();
+	}
+
+	iterator_type begin() const noexcept
+	{
+		return mPool.begin();
+	}
+
+	iterator_type end() const noexcept
+	{
+		return mPool.end();
+	}
+
+private:
+	pool_type &mPool;
+};
