@@ -3,11 +3,12 @@
 #include <cassert>
 #include <vector>
 
-template<typename Entity, typename Component>
+#include "entity.hpp"
+
+template<typename Component>
 class ComponentPool
 {
 public:
-	using entity_type = Entity;
 	using size_type = typename std::vector<Component>::size_type;
 	using iterator = typename std::vector<Entity>::iterator;
 	using const_iterator = typename std::vector<Entity>::const_iterator;

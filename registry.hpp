@@ -24,10 +24,10 @@ template<typename T, typename U, typename... Ts>
 struct Index<T, U, Ts...> : std::integral_constant<std::size_t, 1 + Index<T, Ts...>::value> {};
 }
 
-template<typename Entity, typename... Components>
+template<typename... Components>
 class Registry
 {
-	using pool_type = std::tuple<ComponentPool<Entity, Components>...>;
+	using pool_type = std::tuple<ComponentPool<Components>...>;
 	using mask_type = std::bitset<sizeof...(Components)+1>;
 
 	template<typename C>
@@ -141,6 +141,3 @@ private:
 	std::vector<Entity>    mAvailable;
 	pool_type              mPool;
 };
-
-template<typename... Cs>
-using DefaultRegistry = Registry<std::uint32_t, Cs...>;

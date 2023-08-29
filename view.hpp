@@ -4,6 +4,8 @@
 #include <tuple>
 #include <vector>
 
+#include "entity.hpp"
+
 template<typename Pool, std::size_t...>
 class View;
 
@@ -13,7 +15,6 @@ class View<Pool, Index, Other...>
 	using pool_type = Pool;
 	using mask_type = std::bitset<std::tuple_size<Pool>::value + 1>;
 	using pool_iterator = typename std::tuple_element_t<Index, Pool>::iterator;
-	using entity_type = typename std::tuple_element_t<Index, Pool>::entity_type;
 
 private:
 	class ViewIterator
@@ -52,7 +53,7 @@ private:
 			return mBegin != other.mBegin;
 		}
 
-		entity_type operator*() noexcept
+		Entity operator*() noexcept
 		{
 			return *mBegin;
 		}
@@ -123,7 +124,6 @@ class View<Pool, Index>
 	using pool_type = std::tuple_element_t<Index, Pool>;
 public:
 	using iterator_type = typename pool_type::iterator;
-	using entity_type = typename pool_type::entity_type;
 	using size_type = typename pool_type::size_type;
 public:
 	explicit View(Pool &pool)
