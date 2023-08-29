@@ -2,24 +2,16 @@
 
 #include <vector>
 
-template<typename Entity>
-class IComponentPool
-{
-public:
-	virtual ~IComponentPool() = default;
-	virtual void destroy(Entity entity) = 0;
-};
-
 template<typename Entity, typename Component>
-class ComponentPool: public IComponentPool<Entity>
+class ComponentPool
 {
 public:
+	using entity_type = Entity;
 	using size_type = typename std::vector<Component>::size_type;
 	using iterator = typename std::vector<Entity>::iterator;
 	using const_iterator = typename std::vector<Entity>::const_iterator;
 
 public:
-
 	bool empty() const noexcept
 	{
 		return mComponents.empty();
@@ -84,6 +76,8 @@ public:
 		mEntityToIndex[entity] = mIndexToEntity.size();
 		mIndexToEntity.push_back(entity);
 		mComponents.push_back(std::move(component));
+
+		return mComponents.back();
 	}
 
 	void remove(Entity entity)
