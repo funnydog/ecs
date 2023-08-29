@@ -141,3 +141,6 @@ private:
 	std::vector<Entity>    mAvailable;
 	pool_type              mPool;
 };
+
+template<typename... Cs>
+using DefaultRegistry = Registry<std::uint32_t, Cs...>;
