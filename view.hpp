@@ -131,11 +131,6 @@ public:
 	{
 	}
 
-	size_type size() const noexcept
-	{
-		return mPool.size();
-	}
-
 	iterator_type begin() const noexcept
 	{
 		return mPool.begin();
