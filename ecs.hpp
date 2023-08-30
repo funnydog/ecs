@@ -265,6 +265,8 @@ class Registry
 	template<typename C>
 	static constexpr auto indexOf = Index<C, Components...>::value;
 	static constexpr auto valid_bit = sizeof...(Components);
+public:
+	using size_type = std::size_t;
 
 public:
 	template<typename C>
@@ -274,13 +276,18 @@ public:
 	}
 
 	template<typename C>
-	std::size_t size() const noexcept
+	size_type size() const noexcept
 	{
 		return std::get<indexOf<C>>(mPool).size();
 	}
 
+	size_type size() const noexcept
+	{
+		return mEntities.size() - mAvailable.size();
+	}
+
 	template<typename C>
-	std::size_t capacity() const noexcept
+	size_type capacity() const noexcept
 	{
 		return std::get<indexOf<C>>(mPool).capacity();
 	}
@@ -318,11 +325,6 @@ public:
 		assert(valid(entity) && "Entity not in registry");
 		mEntities[entity].reset(indexOf<C>);
 		std::get<indexOf<C>>(mPool).remove(entity);
-	}
-
-	std::size_t size() const noexcept
-	{
-		return mEntities.size() - mAvailable.size();
 	}
 
 	bool valid(Entity entity) const noexcept
