@@ -46,7 +46,7 @@ public:
 
 	const_iterator cend() noexcept
 	{
-		return mIndexToEntity.end();
+		return mIndexToEntity.cend();
 	}
 
 	bool has(Entity entity) const noexcept
