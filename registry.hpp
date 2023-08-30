@@ -119,7 +119,7 @@ public:
 	void remove(Entity entity)
 	{
 		assert(valid(entity) && "The entity doesn't exist.");
-		(void(remove<Components>(entity)), ...);
+		(void(std::get<indexOf<Components>>(mPool).remove(entity)), ...);
 		mEntities[entity].reset();
 		mAvailable.push_back(entity);
 	}
