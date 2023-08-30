@@ -358,6 +358,13 @@ public:
 		mAvailable.push_back(entity);
 	}
 
+	void clear()
+	{
+		(void(std::get<indexOf<Components>>(mPool).clear()), ...);
+		mEntities.clear();
+		mAvailable.clear();
+	}
+
 	template<typename... Cs>
 	std::enable_if_t<(sizeof...(Cs) == 1), View<pool_type, indexOf<Cs>...>> extract() noexcept
 	{
