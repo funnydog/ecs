@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 
 #include <glm/glm.hpp>
 
@@ -6,22 +7,20 @@
 
 #define PROJECT_NAME "ecs"
 
-struct Gravity
+struct A
 {
-	glm::vec3 force;
 };
 
-struct RigidBody
+struct B
 {
-	glm::vec3 velocity;
-	glm::vec3 acceleration;
 };
 
-struct Transform
+struct C
 {
-	glm::vec3 position;
-	glm::vec3 rotation;
-	glm::vec3 scale;
+};
+
+struct D
+{
 };
 
 int main(int argc, char **argv)
@@ -33,50 +32,72 @@ int main(int argc, char **argv)
     }
     std::cout << "This is project " << PROJECT_NAME << ".\n";
 
-    ecs::Registry<Gravity, RigidBody, Transform> registry;
-    std::cout << "Transform is at: " << registry.getIndex<Transform>() << std::endl
-	      << "RigidBody is at: " << registry.getIndex<RigidBody>() << std::endl
-	      << "Gravity is at:   " << registry.getIndex<Gravity>() << std::endl;
+    std::default_random_engine engine;
+    std::uniform_int_distribution<> randInt(0, 16);
 
-    std::cout << "Sizeof Pool<Transform>: " << registry.size<Transform>() << std::endl;
-    auto entity = registry.create();
-    registry.add(entity, Transform{ {1.0f, 1.0f, 1.0f}, {0.f, 0.f, 0.f}, {1.0f, 1.0f, 1.0f} });
-    registry.add(entity, Gravity{ {0.f, 9.8f, 0.f }});
-    std::cout << "Sizeof Pool<Transform>: " << registry.size<Transform>() << std::endl;
-
-    const auto &t = registry.get<Transform>(entity);
-    std::cout << t.position[0] << "," << t.position[1] << "," << t.position[2] << std::endl
-	      << t.rotation[0] << "," << t.rotation[1] << "," << t.rotation[2] << std::endl
-	      << t.scale[0] << "," << t.scale[1] << "," << t.scale[2] << std::endl;
-
-    entity = registry.create();
-    registry.add(entity, Gravity{ {0.f, 9.8f, 0.f} });
-    entity = registry.create();
-    registry.add(entity, Transform{ {2.0f, 2.0f, 2.0f}, {0.f, 0.f, 0.f}, {1.0f, 1.0f, 1.0f} });
-    registry.add(entity, Gravity{ {0.f, 9.8f, 0.f} });
-
-    for (auto entity: registry.extract<Transform, Gravity>())
+    ecs::Registry<A, B, C, D> reg;
+    std::size_t counts[4] = {};
+    for (std::size_t i = 0; i < 1000; ++i)
     {
-	    std::cout << "Entity " << entity << std::endl;
-
-	    const auto &t = registry.get<Transform>(entity);
-	    const auto &g = registry.get<Gravity>(entity);
-	    std::cout << " " << t.position[0] << "," << t.position[1] << "," << t.position[2] << std::endl
-		      << " " << t.rotation[0] << "," << t.rotation[1] << "," << t.rotation[2] << std::endl
-		      << " " << t.scale[0] << "," << t.scale[1] << "," << t.scale[2] << std::endl;
-	    std::cout << " " << g.force[0] << "," << g.force[1] << "," << g.force[2] << std::endl;
+	    auto e = reg.create();
+	    int value = randInt(engine);
+	    if (value & 1)
+	    {
+		    reg.add<A>(e, A{});
+		    counts[0]++;
+	    }
+	    if (value & 2)
+	    {
+		    reg.add<B>(e, B{});
+		    counts[1]++;
+	    }
+	    if (value & 4)
+	    {
+		    reg.add<C>(e, C{});
+		    counts[2]++;
+	    }
+	    if (value & 8)
+	    {
+		    reg.add<D>(e, D{});
+		    counts[3]++;
+	    }
     }
 
-    for (auto entity: registry.extract<Gravity>())
+    std::cerr << "Counts for A, B, C, D: " << counts[0]
+	      << ", " << counts[1]
+	      << ", " << counts[2]
+	      << ", " << counts[3] << "\n";
+
+    std::cerr << "Pool Counts:           " << reg.size<A>()
+	      << ", " << reg.size<B>()
+	      << ", " << reg.size<C>()
+	      << ", " << reg.size<D>() << "\n";
+
+    std::vector<ecs::Entity> remove;
+    std::size_t count = 0;
+    for (auto e: reg.extract<A, B>())
     {
-	    const auto &g = registry.get<Gravity>(entity);
-	    std::cout << "Entity: " << entity
-		      << " " << g.force[0] << "," << g.force[1] << "," << g.force[2] << std::endl;
+	    if (randInt(engine) == 0)
+	    {
+		    remove.push_back(e);
+	    }
+	    count++;
     }
-
-    registry.remove(entity);
-    std::cout << "remove the trasform for 0" << std::endl;
-    std::cout << "Sizeof Pool<Transform>: " << registry.size<Transform>() << std::endl;
-
+    std::cerr << "Pool count <A, B>: " << count << "\n";
+    std::cerr << "Removing " << remove.size() << " entities\n";
+    for (auto e: remove)
+    {
+	    reg.remove(e);
+    }
+    count = 0;
+    for (auto e: reg.extract<A, B>())
+    {
+	    ++count;
+	    auto &a = reg.get<A>(e);
+	    auto &b = reg.get<B>(e);
+	    (void)a;
+	    (void)b;
+    }
+    std::cerr << "Pool count <A, B>: " << count << "\n";
     return 0;
 }
