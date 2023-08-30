@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "registry.hpp"
+#include "ecs.hpp"
 
 #define PROJECT_NAME "ecs"
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     }
     std::cout << "This is project " << PROJECT_NAME << ".\n";
 
-    Registry<Gravity, RigidBody, Transform> registry;
+    ecs::Registry<Gravity, RigidBody, Transform> registry;
     std::cout << "Transform is at: " << registry.getIndex<Transform>() << std::endl
 	      << "RigidBody is at: " << registry.getIndex<RigidBody>() << std::endl
 	      << "Gravity is at:   " << registry.getIndex<Gravity>() << std::endl;
