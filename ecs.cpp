@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     std::cerr << "Removing " << remove.size() << " entities\n";
     for (auto e: remove)
     {
-	    reg.remove(e);
+		reg.destroy(e);
     }
     count = 0;
     for (auto e: reg.extract<A, B>())

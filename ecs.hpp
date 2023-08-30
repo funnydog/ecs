@@ -348,7 +348,7 @@ public:
 		return entity;
 	}
 
-	void remove(Entity entity)
+	void destroy(Entity entity)
 	{
 		assert(valid(entity) && "The entity doesn't exist.");
 		(void(std::get<indexOf<Components>>(mPool).remove(entity)), ...);
