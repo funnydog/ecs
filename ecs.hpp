@@ -17,8 +17,7 @@ class ComponentPool
 {
 public:
 	using size_type = typename std::vector<Component>::size_type;
-	using iterator = typename std::vector<Entity>::iterator;
-	using const_iterator = typename std::vector<Entity>::const_iterator;
+	using iterator = typename std::vector<Entity>::const_iterator;
 
 public:
 	bool empty() const noexcept
@@ -36,22 +35,12 @@ public:
 		return mComponents.size();
 	}
 
-	iterator begin() noexcept
-	{
-		return mIndexToEntity.begin();
-	}
-
-	iterator end() noexcept
-	{
-		return mIndexToEntity.end();
-	}
-
-	const_iterator cbegin() noexcept
+	iterator begin() const noexcept
 	{
 		return mIndexToEntity.cbegin();
 	}
 
-	const_iterator cend() noexcept
+	iterator end() const noexcept
 	{
 		return mIndexToEntity.cend();
 	}
@@ -221,7 +210,7 @@ private:
 	}
 
 private:
-	pool_type &mPool;
+	const pool_type &mPool;
 	const std::vector<mask_type> &mEntities;
 	mask_type mBitmask;
 	pool_iterator mBegin;
@@ -252,7 +241,7 @@ public:
 	}
 
 private:
-	pool_type &mPool;
+	const pool_type &mPool;
 };
 
 // template trick to get the index of the Component in a pack
