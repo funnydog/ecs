@@ -88,9 +88,9 @@ public:
 		{
 			auto last = mIndexToEntity.size()-1;
 			auto index = mEntityToIndex[entity];
+			mEntityToIndex[mIndexToEntity[last]] = index;
 			mIndexToEntity[index] = mIndexToEntity[last];
-			mComponents[index] = std::move(mComponents[last]);
-
+			std::swap(mComponents[index], mComponents[last]);
 			mIndexToEntity.pop_back();
 			mComponents.pop_back();
 		}
